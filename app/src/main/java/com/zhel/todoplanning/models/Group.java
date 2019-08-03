@@ -7,8 +7,9 @@ public class Group {
     private String name;
 
 
-    public Group(List<Item> items) {
+    public Group(String name, List<Item> items) {
         this.items = items;
+        this.name = name;
     }
 
     public List<Item> getItems() {

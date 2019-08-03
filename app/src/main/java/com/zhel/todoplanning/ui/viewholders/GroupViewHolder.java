@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.zhel.todoplanning.R;
 import com.zhel.todoplanning.models.Group;
+import com.zhel.todoplanning.ui.activities.MainActivity;
 
 public class GroupViewHolder extends RecyclerView.ViewHolder {
     RecyclerView groupList;
@@ -16,7 +17,7 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
     TextView nameGroup;
     Button addItem;
 
-    public GroupViewHolder(@NonNull View itemView) {
+    public GroupViewHolder(View itemView) {
         super(itemView);
         groupList = itemView.findViewById(R.id.group_item_list);
 //        cardGroupName = itemView.findViewById(R.id.card_name_group);
@@ -26,6 +27,7 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Group group) {
         nameGroup.setText(group.getName());
-//        addItem.setOnClickListener(v -> );
+
+        addItem.setOnClickListener(v -> MainActivity.onAddItemClick(group));
     }
 }

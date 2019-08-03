@@ -21,10 +21,10 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder> {
     private Context context;
     private OnAddClickListener onAddClickListener;
 
-    public GroupAdapter(Context context, List<Group> groups, OnAddClickListener onAddClickListener) {
+    public GroupAdapter(Context context, List<Group> groups) {
         this.groups = groups;
         this.context = context;
-        this.onAddClickListener = onAddClickListener;
+//        this.onAddClickListener = onAddClickListener;
     }
 
     @NonNull
@@ -32,8 +32,13 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder> {
     public GroupViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.group_list, viewGroup, false);
-        view.findViewById(R.id.add_item).setOnClickListener(v -> onAddClickListener.onAddClick(groups.get(i)));
+//        view.findViewById(R.id.add_item).setOnClickListener(v -> onAddClickListener.onAddClick(groups.get(i)));
         return new GroupViewHolder(view);
+    }
+
+    public void addGroup(Group group) {
+        groups.add(group);
+        notifyDataSetChanged();
     }
 
     @Override
