@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">ToDoPlanning</string>
-    <string name="popup_addtextgroup_text">Выберите группу из списка или введите название новой группы</string>
+    <string name="popup_addtextgroup_text">Введите название новой группы</string>
 </resources>

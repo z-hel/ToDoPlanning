@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private ItemAdapter itemAdapter;
     private PopupWindow popupAddTextGroup;
     private EditText addTextGroupName;
+    private MainActivity mainActivity;
+    private ConstraintLayout layoutMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
         items = new ArrayList<>();
         groups = new ArrayList<>();
+
+        layoutMain = findViewById(R.id.main_layout);
 
         items.add(new Item("item name", false));
         groups.add(new Group("group", items));
@@ -67,12 +72,16 @@ public class MainActivity extends AppCompatActivity {
     public void onAddNameTextGroupClick() {
 
         showKeyboard();
+        popupAddTextGroup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+//        popupAddTextGroup.update(Constraints.LayoutParams.WRAP_CONTENT, Constraints.LayoutParams.WRAP_CONTENT);
+
+//        popupAddTextGroup.showAtLocation(layoutMain, Gravity.CENTER, 0,0);
 //        popupAddTextGroup.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
-    public void onAddTextGroupClick() { //TODO затемнение
+    public void onAddTextGroupClick() {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        ConstraintLayout layoutMain = findViewById(R.id.main_layout);
+
 
         View customView = inflater.inflate(R.layout.add_select_group_popup,null);
 
@@ -80,12 +89,15 @@ public class MainActivity extends AppCompatActivity {
         close.setOnClickListener(cls -> {
             popupAddTextGroup.dismiss();
             layoutMain.setBackgroundColor(Color.WHITE);
+            hideKeyboard();
         });
+
+//        showKeyboard();
 
         popupAddTextGroup = new PopupWindow(
                 customView,
-                Constraints.LayoutParams.WRAP_CONTENT,
-                Constraints.LayoutParams.WRAP_CONTENT
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
         );
 
         if (Build.VERSION.SDK_INT >= 21){
@@ -93,6 +105,17 @@ public class MainActivity extends AppCompatActivity {
         }
         layoutMain.setBackgroundColor(Color.GRAY);
         ConstraintLayout layoutPopup = customView.findViewById(R.id.popup_layout);
+
+
+//        layoutMain.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                popupAddTextGroup.showAtLocation(layoutMain,
+//                        Gravity.CENTER_VERTICAL, 0, 0); //set location here
+//            }
+//        });
+
+//        popupAddTextGroup.setInputMethodMode();
         popupAddTextGroup.showAtLocation(layoutMain, Gravity.CENTER,0,0);
         layoutPopup.setBackgroundColor(Color.WHITE);
 
@@ -108,5 +131,10 @@ public class MainActivity extends AppCompatActivity {
     public void showKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 }
