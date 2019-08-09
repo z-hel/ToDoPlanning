@@ -25,6 +25,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
+        android:gravity="center"
         android:padding="16sp"
         android:text="@string/popup_addtextgroup_text"
         android:textSize="16sp"
@@ -35,34 +36,33 @@
         tools:text="Введите название новой группы" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/add_group_btn"
+        style="@android:style/Widget.Material.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-
         android:backgroundTintMode="screen"
         android:text="Добавить"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_text_group_name"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.025" />
 
     <EditText
         android:id="@+id/add_text_group_name"
-        android:layout_width="332dp"
+        android:layout_width="247dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="textCapSentences"
-        app:layout_constraintEnd_toStartOf="@+id/close_image"
-        app:layout_constraintStart_toStartOf="parent"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintEnd_toEndOf="@+id/text_popup"
+        app:layout_constraintStart_toStartOf="@+id/text_popup"
         app:layout_constraintTop_toBottomOf="@+id/text_popup" />
 
 </android.support.constraint.ConstraintLayout>

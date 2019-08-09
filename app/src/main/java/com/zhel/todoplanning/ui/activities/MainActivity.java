@@ -2,6 +2,8 @@ package com.zhel.todoplanning.ui.activities;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Constraints;
@@ -71,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void onAddNameTextGroupClick() {
 
-        showKeyboard();
-        popupAddTextGroup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+//        showKeyboard();
+//        popupAddTextGroup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 //        popupAddTextGroup.update(Constraints.LayoutParams.WRAP_CONTENT, Constraints.LayoutParams.WRAP_CONTENT);
 
 //        popupAddTextGroup.showAtLocation(layoutMain, Gravity.CENTER, 0,0);
@@ -88,42 +90,33 @@ public class MainActivity extends AppCompatActivity {
         ImageButton close = customView.findViewById(R.id.close_image);
         close.setOnClickListener(cls -> {
             popupAddTextGroup.dismiss();
-            layoutMain.setBackgroundColor(Color.WHITE);
-            hideKeyboard();
-        });
 
-//        showKeyboard();
+        });
 
         popupAddTextGroup = new PopupWindow(
                 customView,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                true
         );
-
-        if (Build.VERSION.SDK_INT >= 21){
-            popupAddTextGroup.setElevation(5.0f);
+//        layoutMain.setBackgroundColor(Color.GRAY);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            layoutMain.setForeground(new ColorDrawable(Color.argb(70, 105, 105, 105)));
         }
-        layoutMain.setBackgroundColor(Color.GRAY);
         ConstraintLayout layoutPopup = customView.findViewById(R.id.popup_layout);
 
-
-//        layoutMain.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                popupAddTextGroup.showAtLocation(layoutMain,
-//                        Gravity.CENTER_VERTICAL, 0, 0); //set location here
-//            }
-//        });
-
-//        popupAddTextGroup.setInputMethodMode();
-        popupAddTextGroup.showAtLocation(layoutMain, Gravity.CENTER,0,0);
+        popupAddTextGroup.showAtLocation(customView, Gravity.CENTER,0,0);
         layoutPopup.setBackgroundColor(Color.WHITE);
+        popupAddTextGroup.setOnDismissListener(() -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                layoutMain.setForeground(null);//.setBackgroundColor(Color.WHITE);
+            }
+            hideKeyboard();
+        });
 
 
         addTextGroupName = customView.findViewById(R.id.add_text_group_name);
 
-//        addTextGroupName.requestFocus();
-//        popupAddTextGroup.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         addTextGroupName.setOnClickListener(v -> onAddNameTextGroupClick());
 
     }
@@ -136,5 +129,12 @@ public class MainActivity extends AppCompatActivity {
     public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (popupAddTextGroup != null)
+            popupAddTextGroup.dismiss();
     }
 }
