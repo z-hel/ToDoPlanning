@@ -60,7 +60,6 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
         app:layout_constraintEnd_toEndOf="@+id/text_popup"
         app:layout_constraintStart_toStartOf="@+id/text_popup"
         app:layout_constraintTop_toBottomOf="@+id/text_popup" />

@@ -1,17 +1,15 @@
 package com.zhel.todoplanning.ui.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.Constraints;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,7 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.zhel.todoplanning.R;
 import com.zhel.todoplanning.models.Group;
@@ -41,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private GroupAdapter groupAdapter;
     private ItemAdapter itemAdapter;
     private PopupWindow popupAddTextGroup;
-    private EditText addTextGroupName;
+    private EditText textGroupName;
+    private Button addTextGroupName;
+    private TextView textGroupPopup;
+
     private MainActivity mainActivity;
     private ConstraintLayout layoutMain;
 
@@ -55,30 +56,40 @@ public class MainActivity extends AppCompatActivity {
 
         layoutMain = findViewById(R.id.main_layout);
 
-        items.add(new Item("item name", false));
-        groups.add(new Group("group", items));
+//        items.add(new Item("item name", false));
+//        groups.add(new Group("group", items));
 
         addTextGroup = findViewById(R.id.add_text_group);
         addTextGroup.setOnClickListener(v -> onAddTextGroupClick());
 
 
         groupRV = findViewById(R.id.group_item_list);
-        groupAdapter = new GroupAdapter(this, groups);
+        groupAdapter = new GroupAdapter(this, groups, (Group group) -> {
+            Intent myIntent = new Intent(this, ItemActivity.class);
+            myIntent.putExtra("item", group.getName());
+            this.startActivity(myIntent);
+        });
         groupRV.setAdapter(groupAdapter);
+
+
     }
 
     public static void onAddItemClick(Group group) {
-
+//        Intent myIntent = new Intent(this, ItemActivity.class);
+//        myIntent.putExtra("item", group); //Optional parameters
+//        this.startActivity(myIntent);
     }
 
     public void onAddNameTextGroupClick() {
 
-//        showKeyboard();
-//        popupAddTextGroup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-//        popupAddTextGroup.update(Constraints.LayoutParams.WRAP_CONTENT, Constraints.LayoutParams.WRAP_CONTENT);
-
-//        popupAddTextGroup.showAtLocation(layoutMain, Gravity.CENTER, 0,0);
-//        popupAddTextGroup.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        String name = textGroupName.getText().toString();
+        if (!name.isEmpty()) {
+            items = new ArrayList<>();
+            groupAdapter.addGroup(new Group(name, items));
+//            itemAdapter = new ItemAdapter(this, items);
+//            itemRV.setAdapter(itemAdapter);
+            popupAddTextGroup.dismiss();
+        }
     }
 
     public void onAddTextGroupClick() {
@@ -115,7 +126,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        addTextGroupName = customView.findViewById(R.id.add_text_group_name);
+        textGroupName = customView.findViewById(R.id.add_text_group_name);
+        addTextGroupName = customView.findViewById(R.id.add_group_btn);
+        textGroupPopup = customView.findViewById(R.id.text_popup);
 
         addTextGroupName.setOnClickListener(v -> onAddNameTextGroupClick());
 
