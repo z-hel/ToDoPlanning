@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,8 +27,12 @@ import com.zhel.todoplanning.models.Item;
 import com.zhel.todoplanning.ui.adapters.GroupAdapter;
 import com.zhel.todoplanning.ui.adapters.ItemAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.zhel.todoplanning.ui.activities.ItemActivity.GROUP_EXTRA;
+import static com.zhel.todoplanning.ui.activities.ItemActivity.ITEM_GROUP_EXTRA;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private MainActivity mainActivity;
     private ConstraintLayout layoutMain;
 
+    public static String MAIN_EXTRA = "item";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,31 +60,43 @@ public class MainActivity extends AppCompatActivity {
 
         items = new ArrayList<>();
         groups = new ArrayList<>();
-
         layoutMain = findViewById(R.id.main_layout);
-
-//        items.add(new Item("item name", false));
-//        groups.add(new Group("group", items));
-
         addTextGroup = findViewById(R.id.add_text_group);
         addTextGroup.setOnClickListener(v -> onAddTextGroupClick());
 
 
         groupRV = findViewById(R.id.group_item_list);
-        groupAdapter = new GroupAdapter(this, groups, (Group group) -> {
+
+        groupAdapter = new GroupAdapter(this, groups, group -> {
             Intent myIntent = new Intent(this, ItemActivity.class);
-            myIntent.putExtra("item", group.getName());
+            myIntent.putExtra(GROUP_EXTRA, (Serializable) group);
             this.startActivity(myIntent);
         });
         groupRV.setAdapter(groupAdapter);
 
+//        if (items.isEmpty()) {
+//            itemRV.setVisibility(View.GONE);
+//        }
+//        else {
+//            itemRV.setVisibility(View.VISIBLE);
+//        }
 
+        Group groupWithItem = (Group) getIntent().getSerializableExtra(ITEM_GROUP_EXTRA);
+        if (groupWithItem != null) {
+            items = groupWithItem.getItems();
+//        Item item = new Item(groupWithItem.getItems(), false);
+            itemAdapter = new ItemAdapter(this, items);
+            itemRV.setAdapter(itemAdapter);
+        }
     }
 
-    public static void onAddItemClick(Group group) {
-//        Intent myIntent = new Intent(this, ItemActivity.class);
-//        myIntent.putExtra("item", group); //Optional parameters
-//        this.startActivity(myIntent);
+    public static void onSaveItem(Item item, Group group) {
+//        List<Item> items = group.getItems();
+//        items.add(item);
+//        group.setItems(items);
+
+//        itemAdapter = new ItemAdapter(this, items);
+//        itemRV.setAdapter(itemAdapter);
     }
 
     public void onAddNameTextGroupClick() {

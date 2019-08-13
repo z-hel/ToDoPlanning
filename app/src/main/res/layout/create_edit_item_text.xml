@@ -12,7 +12,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clickable="true"
+        android:cursorVisible="true"
         android:editable="true"
+        android:enabled="true"
         android:gravity="start"
         android:inputType="textMultiLine"
         android:isScrollContainer="true"
@@ -41,13 +43,10 @@
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:background="@drawable/ic_arrow_back_black_24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="@drawable/ic_arrow_back_black_24dp" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/group_name_item"
@@ -61,8 +60,18 @@
                 android:text="TextView"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/save_text_item"
                 app:layout_constraintStart_toEndOf="@+id/back_item_to_main"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/save_text_item"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/ic_check_black_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
