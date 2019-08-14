@@ -28,6 +28,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         notifyDataSetChanged();
     }
 
+//    public void setAllItems(List<Item> itemList) {
+//        items.clear();
+//        items.addAll(itemList);
+//        notifyDataSetChanged();
+//    }
+
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {

@@ -1,6 +1,8 @@
 package com.zhel.todoplanning.models;
 
-public class Item {
+import java.io.Serializable;
+
+public class Item implements Serializable {
     private String itemName;
     private boolean isStrikeout;
 

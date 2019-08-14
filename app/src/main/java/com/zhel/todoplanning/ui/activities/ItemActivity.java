@@ -27,7 +27,9 @@ public class ItemActivity extends AppCompatActivity {
 
     public static String GROUP_EXTRA = "group";
     public static String ITEM_GROUP_EXTRA = "groupName";
+    public static String INDEX_GROUP = "indexGroup";
     Group group;
+    int indexGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class ItemActivity extends AppCompatActivity {
         setContentView(R.layout.create_edit_item_text);
         Intent intent = getIntent();
         group = (Group) intent.getSerializableExtra(GROUP_EXTRA);
-
+        indexGroup = intent.getIntExtra(INDEX_GROUP, 8);
 //        items = new ArrayList<>();
 //        itemAdapter = new ItemAdapter(this, items);
 
@@ -64,8 +66,12 @@ public class ItemActivity extends AppCompatActivity {
         items.add(item);
         group.setItems(items);
         Intent myIntent = new Intent(this, MainActivity.class);
-        myIntent.putExtra(ITEM_GROUP_EXTRA, (Serializable) group);
-        this.startActivity(myIntent);
+        myIntent.putExtra(ITEM_GROUP_EXTRA, group);
+        myIntent.putExtra(INDEX_GROUP, indexGroup);
+
+        setResult(RESULT_OK, myIntent);
+        finish();
+//        this.startActivity(myIntent);
     }
 
     @Override

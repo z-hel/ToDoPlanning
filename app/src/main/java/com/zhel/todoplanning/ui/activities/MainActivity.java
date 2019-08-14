@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.zhel.todoplanning.ui.activities.ItemActivity.GROUP_EXTRA;
+import static com.zhel.todoplanning.ui.activities.ItemActivity.INDEX_GROUP;
 import static com.zhel.todoplanning.ui.activities.ItemActivity.ITEM_GROUP_EXTRA;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,7 +53,27 @@ public class MainActivity extends AppCompatActivity {
     private MainActivity mainActivity;
     private ConstraintLayout layoutMain;
 
+    private int indexGroup;
     public static String MAIN_EXTRA = "item";
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Intent intent = getIntent();
+        if (data == null) return;
+        Group groupWithItem = (Group) data.getSerializableExtra(ITEM_GROUP_EXTRA);
+        int index = data.getIntExtra(INDEX_GROUP, 0);
+//        if (groupWithItem != null) {
+            items = groupWithItem.getItems();
+//        Item item = new Item(groupWithItem.getItems(), false);
+
+            itemRV = groupRV.getChildAt(index).findViewById(R.id.item_list_rv);
+            itemAdapter = new ItemAdapter(itemRV.getContext(), items);
+//            itemAdapter.setAllItems(items);
+            itemRV.setAdapter(itemAdapter);
+//            itemAdapter.notifyDataSetChanged();
+//        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +89,13 @@ public class MainActivity extends AppCompatActivity {
 
         groupRV = findViewById(R.id.group_item_list);
 
-        groupAdapter = new GroupAdapter(this, groups, group -> {
+        groupAdapter = new GroupAdapter(this, groups, (group, index) -> {
             Intent myIntent = new Intent(this, ItemActivity.class);
-            myIntent.putExtra(GROUP_EXTRA, (Serializable) group);
-            this.startActivity(myIntent);
+            myIntent.putExtra(GROUP_EXTRA, group);
+            myIntent.putExtra(INDEX_GROUP, index);
+
+            startActivityForResult(myIntent, 1);
+//            this.startActivity(myIntent);
         });
         groupRV.setAdapter(groupAdapter);
 
@@ -81,13 +106,6 @@ public class MainActivity extends AppCompatActivity {
 //            itemRV.setVisibility(View.VISIBLE);
 //        }
 
-        Group groupWithItem = (Group) getIntent().getSerializableExtra(ITEM_GROUP_EXTRA);
-        if (groupWithItem != null) {
-            items = groupWithItem.getItems();
-//        Item item = new Item(groupWithItem.getItems(), false);
-            itemAdapter = new ItemAdapter(this, items);
-            itemRV.setAdapter(itemAdapter);
-        }
     }
 
     public static void onSaveItem(Item item, Group group) {
