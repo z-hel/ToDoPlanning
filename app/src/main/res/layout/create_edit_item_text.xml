@@ -7,10 +7,11 @@
     android:layout_height="match_parent">
 
 
-    <TextView
+    <EditText
         android:id="@+id/item_text"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@android:color/transparent"
         android:clickable="true"
         android:cursorVisible="true"
         android:editable="true"
@@ -20,7 +21,7 @@
         android:isScrollContainer="true"
         android:padding="16dp"
         android:text="TextView"
-        android:textSize="16sp"
+        android:textColor="@color/cardview_dark_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

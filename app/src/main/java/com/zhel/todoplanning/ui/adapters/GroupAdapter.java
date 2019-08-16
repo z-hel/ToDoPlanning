@@ -19,13 +19,15 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder> {
     private List<Group> groups;
     private Context context;
     private OnAddItemClickListener onAddItemClickListener;
+    private OnDropDownGroupClickListener onDropDownGroupClickListener;
 //    private Button addItem;
 //    private RecyclerView itemList;
 
-    public GroupAdapter(Context context, List<Group> groups, OnAddItemClickListener onAddItemClickListener) {
+    public GroupAdapter(Context context, List<Group> groups, OnAddItemClickListener onAddItemClickListener, OnDropDownGroupClickListener onDropDownGroupClickListener) {
         this.groups = groups;
         this.context = context;
         this.onAddItemClickListener = onAddItemClickListener;
+        this.onDropDownGroupClickListener = onDropDownGroupClickListener;
     }
 
     @NonNull
@@ -50,6 +52,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder> {
     public void onBindViewHolder(@NonNull GroupViewHolder groupViewHolder, int i) {
         groupViewHolder.bind(groups.get(i));
         groupViewHolder.itemView.findViewById(R.id.add_item).setOnClickListener(group -> onAddItemClickListener.onAddItemClick(groups.get(i), i));
+        groupViewHolder.itemView.findViewById(R.id.name_group).setOnClickListener(group -> onDropDownGroupClickListener.onDropDownGroupClick(i));
 //        groupViewHolder.itemView.findViewById(R.id.item_list_rv)
 //        itemList = groupViewHolder.itemView.findViewById(R.id.item_list_rv);
 //        ItemAdapter itemAdapter = new ItemAdapter(this, groups.get(i).getItems());
@@ -69,5 +72,8 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder> {
 
     public interface OnAddItemClickListener {
         void onAddItemClick(Group group, int index);
+    }
+    public interface OnDropDownGroupClickListener {
+        void onDropDownGroupClick(int index);
     }
 }

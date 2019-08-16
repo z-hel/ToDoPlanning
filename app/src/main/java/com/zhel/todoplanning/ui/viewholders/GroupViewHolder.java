@@ -28,12 +28,12 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Group group) {
         nameGroup.setText(group.getName());
-        if (group.getItems().isEmpty()) {
-            itemList.setVisibility(View.GONE);
-        }
-        else {
-            itemList.setVisibility(View.VISIBLE);
-        }
+//        if (group.getItems().isEmpty()) {
+//            itemList.setVisibility(View.GONE);
+//        }
+//        else {
+//            itemList.setVisibility(View.VISIBLE);
+//        }
 //        addItem.setOnClickListener(v -> MainActivity.onSaveItem(group));
     }
 }

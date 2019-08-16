@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -28,13 +28,12 @@ import com.zhel.todoplanning.models.Item;
 import com.zhel.todoplanning.ui.adapters.GroupAdapter;
 import com.zhel.todoplanning.ui.adapters.ItemAdapter;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.zhel.todoplanning.ui.activities.ItemActivity.GROUP_EXTRA;
 import static com.zhel.todoplanning.ui.activities.ItemActivity.INDEX_GROUP;
-import static com.zhel.todoplanning.ui.activities.ItemActivity.ITEM_GROUP_EXTRA;
+import static com.zhel.todoplanning.ui.activities.ItemActivity.ITEM_EXTRA;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,20 +58,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
-//        Intent intent = getIntent();
         if (data == null) return;
-        Group groupWithItem = (Group) data.getSerializableExtra(ITEM_GROUP_EXTRA);
+        Item item = (Item) data.getSerializableExtra(ITEM_EXTRA);
         int index = data.getIntExtra(INDEX_GROUP, 0);
-//        if (groupWithItem != null) {
-            items = groupWithItem.getItems();
-//        Item item = new Item(groupWithItem.getItems(), false);
+//            items = groupWithItem.getItems();
+            items = groups.get(index).getItems();
+            items.add(item);
 
             itemRV = groupRV.getChildAt(index).findViewById(R.id.item_list_rv);
-            itemAdapter = new ItemAdapter(itemRV.getContext(), items);
-//            itemAdapter.setAllItems(items);
+            itemAdapter = new ItemAdapter(this, items);
             itemRV.setAdapter(itemAdapter);
-//            itemAdapter.notifyDataSetChanged();
-//        }
     }
 
     @Override
@@ -96,25 +91,21 @@ public class MainActivity extends AppCompatActivity {
 
             startActivityForResult(myIntent, 1);
 //            this.startActivity(myIntent);
-        });
+        }, this::dropDownItems);
         groupRV.setAdapter(groupAdapter);
 
-//        if (items.isEmpty()) {
-//            itemRV.setVisibility(View.GONE);
-//        }
-//        else {
-//            itemRV.setVisibility(View.VISIBLE);
-//        }
 
     }
 
-    public static void onSaveItem(Item item, Group group) {
-//        List<Item> items = group.getItems();
-//        items.add(item);
-//        group.setItems(items);
+    public void dropDownItems(int i) {
+        try {
+            View view = groupRV.getChildAt(i).findViewById(R.id.item_list_rv);
+            if (view.getVisibility() == View.VISIBLE)
+                view.setVisibility(View.GONE);
+            else view.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
 
-//        itemAdapter = new ItemAdapter(this, items);
-//        itemRV.setAdapter(itemAdapter);
+        }
     }
 
     public void onAddNameTextGroupClick() {
@@ -123,8 +114,6 @@ public class MainActivity extends AppCompatActivity {
         if (!name.isEmpty()) {
             items = new ArrayList<>();
             groupAdapter.addGroup(new Group(name, items));
-//            itemAdapter = new ItemAdapter(this, items);
-//            itemRV.setAdapter(itemAdapter);
             popupAddTextGroup.dismiss();
         }
     }
