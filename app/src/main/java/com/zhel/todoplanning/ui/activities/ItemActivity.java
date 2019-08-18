@@ -25,8 +25,10 @@ public class ItemActivity extends AppCompatActivity {
     public static String GROUP_EXTRA = "group";
     public static String ITEM_EXTRA = "item";
     public static String INDEX_GROUP = "indexGroup";
+    public static String INDEX_ITEM_EXTRA = "-999";
     Group group;
     int indexGroup;
+    int indexItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class ItemActivity extends AppCompatActivity {
         Intent intent = getIntent();
         group = (Group) intent.getSerializableExtra(GROUP_EXTRA);
         indexGroup = intent.getIntExtra(INDEX_GROUP, 0);
+        indexItem = intent.getIntExtra(INDEX_ITEM_EXTRA, 0);
 //        items = new ArrayList<>();
 //        itemAdapter = new ItemAdapter(this, items);
 
@@ -48,6 +51,10 @@ public class ItemActivity extends AppCompatActivity {
         saveTextItem.setOnClickListener(save -> saveText());
 
         groupNameTV.setText(group.getName());
+
+        if (indexItem != Integer.parseInt(INDEX_ITEM_EXTRA)) {
+            textItem.setText(group.getItems().get(indexItem).getItemName());
+        }
     }
 
     public void saveText() {
@@ -67,6 +74,12 @@ public class ItemActivity extends AppCompatActivity {
 //        myIntent.putExtra(ITEM_EXTRA, group);
         myIntent.putExtra(INDEX_GROUP, indexGroup);
         myIntent.putExtra(ITEM_EXTRA, item);
+        if (indexItem == Integer.parseInt(INDEX_ITEM_EXTRA)) {
+            myIntent.putExtra(INDEX_ITEM_EXTRA, INDEX_ITEM_EXTRA);
+        } else {
+            myIntent.putExtra(INDEX_ITEM_EXTRA, indexItem);
+        }
+
 
         setResult(RESULT_OK, myIntent);
         finish();

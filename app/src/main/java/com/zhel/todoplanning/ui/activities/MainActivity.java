@@ -33,6 +33,7 @@ import java.util.List;
 
 import static com.zhel.todoplanning.ui.activities.ItemActivity.GROUP_EXTRA;
 import static com.zhel.todoplanning.ui.activities.ItemActivity.INDEX_GROUP;
+import static com.zhel.todoplanning.ui.activities.ItemActivity.INDEX_ITEM_EXTRA;
 import static com.zhel.todoplanning.ui.activities.ItemActivity.ITEM_EXTRA;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,12 +62,27 @@ public class MainActivity extends AppCompatActivity {
         if (data == null) return;
         Item item = (Item) data.getSerializableExtra(ITEM_EXTRA);
         int index = data.getIntExtra(INDEX_GROUP, 0);
+        int indexItem = data.getIntExtra(INDEX_ITEM_EXTRA, Integer.parseInt(INDEX_ITEM_EXTRA));
 //            items = groupWithItem.getItems();
-            items = groups.get(index).getItems();
+        items = groups.get(index).getItems();
+        if (indexItem == Integer.parseInt(INDEX_ITEM_EXTRA)) {
+
             items.add(item);
+        }
+        else {
+            items.get(indexItem).setItemName(item.getItemName());
+        }
+
 
             itemRV = groupRV.getChildAt(index).findViewById(R.id.item_list_rv);
-            itemAdapter = new ItemAdapter(this, items);
+            itemAdapter = new ItemAdapter(this, items, i -> {
+                Intent myIntent = new Intent(this, ItemActivity.class);
+                myIntent.putExtra(INDEX_ITEM_EXTRA, i);
+                myIntent.putExtra(GROUP_EXTRA, groups.get(index));
+                myIntent.putExtra(INDEX_GROUP, index);
+
+                startActivityForResult(myIntent, 1);
+            });
             itemRV.setAdapter(itemAdapter);
     }
 
@@ -88,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
             Intent myIntent = new Intent(this, ItemActivity.class);
             myIntent.putExtra(GROUP_EXTRA, group);
             myIntent.putExtra(INDEX_GROUP, index);
+            myIntent.putExtra(INDEX_ITEM_EXTRA, Integer.parseInt(INDEX_ITEM_EXTRA));
 
             startActivityForResult(myIntent, 1);
 //            this.startActivity(myIntent);

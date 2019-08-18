@@ -17,10 +17,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
     private List<Item> items;
     private Context context;
+    private OnEditItemClickListener onEditItemClickListener;
 
-    public ItemAdapter(Context context, List<Item> items) {
+    public ItemAdapter(Context context, List<Item> items, OnEditItemClickListener onEditItemClickListener) {
         this.items = items;
         this.context = context;
+        this.onEditItemClickListener = onEditItemClickListener;
     }
 
     public void addItem(Item item) {
@@ -45,10 +47,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder itemViewHolder, int i) {
         itemViewHolder.bind(items.get(i));
+        itemViewHolder.itemView.setOnClickListener(x-> onEditItemClickListener.onEditItemClick(items.get(i)));
     }
 
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public interface OnEditItemClickListener {
+        public void onEditItemClick(Item item);
     }
 }
