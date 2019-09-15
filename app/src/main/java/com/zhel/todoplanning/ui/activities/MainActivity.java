@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText textGroupName;
     private Button addTextGroupName;
     private TextView textGroupPopup;
+    private Button addDateGroup;
 
     private MainActivity mainActivity;
     private ConstraintLayout layoutMain;
@@ -95,7 +97,9 @@ public class MainActivity extends AppCompatActivity {
         groups = new ArrayList<>();
         layoutMain = findViewById(R.id.main_layout);
         addTextGroup = findViewById(R.id.add_text_group);
+        addDateGroup = findViewById(R.id.add_date_group);
         addTextGroup.setOnClickListener(v -> onAddTextGroupClick());
+        addDateGroup.setOnClickListener(v -> onAddDateGroupClick());
 
 
         groupRV = findViewById(R.id.group_item_list);
@@ -125,6 +129,53 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void onAddDateGroupClick() {
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.calendar_popup,null);
+        Button close = customView.findViewById(R.id.close_calendar_popup);
+        close.setOnClickListener(cls -> popupAddTextGroup.dismiss());
+
+        popupAddTextGroup = new PopupWindow(
+                customView,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                true
+        );
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            layoutMain.setForeground(new ColorDrawable(Color.argb(70, 105, 105, 105)));
+        }
+        ConstraintLayout layoutPopup = customView.findViewById(R.id.calendar_popup_layout);
+
+        popupAddTextGroup.showAtLocation(customView, Gravity.CENTER,0,0);
+        layoutPopup.setBackgroundColor(Color.WHITE);
+        popupAddTextGroup.setOnDismissListener(() -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                layoutMain.setForeground(null);
+            }
+        });
+
+        CalendarView calendar = customView.findViewById(R.id.calendarView);
+        calendar.setOnDateChangeListener(this::onAddNameDateGroupClick);
+    }
+
+    private void onAddNameDateGroupClick(CalendarView view, int year, int month, int dayOfMonth) {
+        String name = String.valueOf(dayOfMonth + '.' + month + '.' + year);
+        for (Group group: groups) {
+            if (group.getName().equals(name)) {
+                if (!(group.getItems().isEmpty())) {
+                    
+                }
+
+            }
+        }
+//        if (!name.isEmpty()) {
+            items = new ArrayList<>();
+            groupAdapter.addGroup(new Group(name, items));
+            popupAddTextGroup.dismiss();
+//        }
+    }
+
     public void onAddNameTextGroupClick() {
 
         String name = textGroupName.getText().toString();
@@ -137,15 +188,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onAddTextGroupClick() {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-
-
         View customView = inflater.inflate(R.layout.add_select_group_popup,null);
-
         ImageButton close = customView.findViewById(R.id.close_image);
-        close.setOnClickListener(cls -> {
-            popupAddTextGroup.dismiss();
-
-        });
+        close.setOnClickListener(cls -> popupAddTextGroup.dismiss());
 
         popupAddTextGroup = new PopupWindow(
                 customView,
@@ -153,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 true
         );
-//        layoutMain.setBackgroundColor(Color.GRAY);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             layoutMain.setForeground(new ColorDrawable(Color.argb(70, 105, 105, 105)));
         }
@@ -163,11 +208,10 @@ public class MainActivity extends AppCompatActivity {
         layoutPopup.setBackgroundColor(Color.WHITE);
         popupAddTextGroup.setOnDismissListener(() -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                layoutMain.setForeground(null);//.setBackgroundColor(Color.WHITE);
+                layoutMain.setForeground(null);
             }
             hideKeyboard();
         });
-
 
         textGroupName = customView.findViewById(R.id.add_text_group_name);
         addTextGroupName = customView.findViewById(R.id.add_group_btn);
