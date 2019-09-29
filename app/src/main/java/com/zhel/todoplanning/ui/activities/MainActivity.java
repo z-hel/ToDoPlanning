@@ -124,9 +124,7 @@ public class MainActivity extends AppCompatActivity {
             if (view.getVisibility() == View.VISIBLE)
                 view.setVisibility(View.GONE);
             else view.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-
-        }
+        } catch (Exception e) {}
     }
 
     public void onAddDateGroupClick() {
@@ -160,20 +158,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onAddNameDateGroupClick(CalendarView view, int year, int month, int dayOfMonth) {
-        String name = String.valueOf(dayOfMonth + '.' + month + '.' + year);
+        boolean isGroupExist = false;
+        String name = String.valueOf(dayOfMonth) + '.' + String.valueOf(month) + '.' + String.valueOf(year);
         for (Group group: groups) {
+            //                if (!(group.getItems().isEmpty())) {}
             if (group.getName().equals(name)) {
-                if (!(group.getItems().isEmpty())) {
-                    
-                }
-
+                isGroupExist = true;
+                Intent myIntent = new Intent(this, ItemActivity.class);
+                myIntent.putExtra(GROUP_EXTRA, group);
+                myIntent.putExtra(INDEX_GROUP, groups.indexOf(group));
+                myIntent.putExtra(INDEX_ITEM_EXTRA, Integer.parseInt(INDEX_ITEM_EXTRA));
+                popupAddTextGroup.dismiss();
+                startActivityForResult(myIntent, 1);
+                break;
             }
         }
-//        if (!name.isEmpty()) {
+        if (!isGroupExist) {
             items = new ArrayList<>();
             groupAdapter.addGroup(new Group(name, items));
             popupAddTextGroup.dismiss();
-//        }
+        }
     }
 
     public void onAddNameTextGroupClick() {
